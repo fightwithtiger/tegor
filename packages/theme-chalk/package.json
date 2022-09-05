@@ -2,6 +2,9 @@
   "name": "@tegor-ui/theme-chalk",
   "version": "1.0.0",
   "description": "",
+  "files": [
+    "style"
+  ],
   "scripts": {
     "copy": "rimraf style/* && cp ../components/dist/css/index.css style"
   },

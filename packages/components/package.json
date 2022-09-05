@@ -12,6 +12,9 @@
       "types": "./dist/index.d.ts"
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "rollup -wc",
     "build": "rimraf dist && rollup -c"
