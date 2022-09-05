@@ -17,6 +17,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "peerDependencies": {
+    "vue": "^3.2.0"
+  },
   "dependencies": {
     "@tegor/share": "workspace:^1.0.0",
     "vue": "^3.2.38"
