@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tegor-ui/theme-chalk": "workspace:^1.0.0",
     "@tegor/components": "workspace:^1.0.0",
     "tegor-ui": "workspace:^1.0.0",
     "vue": "^3.2.37"

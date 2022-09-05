@@ -7,6 +7,7 @@ import typescript from 'rollup-plugin-typescript2';
 import vuePlugin from "rollup-plugin-vue"
 import RollupPluginPostcss from 'rollup-plugin-postcss'
 import Autoprefixer from 'autoprefixer'
+import cssnano from 'cssnano'
 import pkg from './package.json'
 
 const extensions = ['.ts', '.js', '.vue']
@@ -46,7 +47,13 @@ const config = [
         css: false,
         compileTemplate: true
       }),
-      RollupPluginPostcss({ extract: true, plugins: [Autoprefixer] }),
+      RollupPluginPostcss({
+        extract: true,
+        plugins: [
+          Autoprefixer,
+          cssnano()
+        ]
+      }),
       babel({
         exclude: 'node_modules/**',
         extensions,

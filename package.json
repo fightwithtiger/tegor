@@ -8,7 +8,8 @@
   ],
   "main": "index.js",
   "scripts": {
-    "build": "pnpm --filter=\"./packages/**\" run build",
+    "build": "pnpm --filter=\"./packages/**\" run build && pnpm run postbuild",
+    "postbuild": "pnpm --filter @tegor-ui/theme-chalk copy",
     "play": "pnpm -C play dev",
     "build:tu": "pnpm build --filter tegor-ui",
     "bc": "pnpm build --filter @tegor/components",

@@ -1,0 +1,13 @@
+{
+  "name": "@tegor-ui/theme-chalk",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "copy": "rimraf style/* && cp ../components/dist/css/index.css style"
+  },
+  "keywords": [],
+  "author": "",
+  "devDependencies": {
+    "rimraf": "^3.0.2"
+  }
+}

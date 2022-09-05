@@ -7,6 +7,9 @@ import typescript from 'rollup-plugin-typescript2';
 import vuePlugin from "rollup-plugin-vue"
 import RollupPluginPostcss from 'rollup-plugin-postcss'
 import Autoprefixer from 'autoprefixer'
+import cssnano from 'cssnano'
+import serve from 'rollup-plugin-serve'
+import livereload from 'rollup-plugin-livereload'
 import pkg from './package.json'
 
 const extensions = ['.ts', '.js', '.vue']
@@ -46,12 +49,23 @@ const config = [
         css: false,
         compileTemplate: true
       }),
-      RollupPluginPostcss({ extract: true, plugins: [Autoprefixer] }),
+      RollupPluginPostcss({
+        extract: 'css/index.css',
+        plugins: [
+          Autoprefixer,
+          cssnano(),
+        ] 
+      }),
       babel({
         exclude: 'node_modules/**',
         extensions,
       }),
       commonjs({ extensions }),
+      // serve({
+      //   contentBase: '',  //服务器启动的文件夹，默认是项目根目录，需要在该文件下创建index.html
+      //   port: 8020   //端口号，默认10001
+      // }),    
+      // livereload('dist')
     ],
     external: ['vue']
   }
