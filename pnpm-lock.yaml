@@ -4,8 +4,10 @@ importers:
 
   .:
     specifiers:
+      '@tegor/share': workspace:^1.0.0
       vue: ^3.2.38
     dependencies:
+      '@tegor/share': link:packages/share
       vue: 3.2.38
 
   packages/components:

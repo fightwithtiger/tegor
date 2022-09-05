@@ -53,7 +53,7 @@ const sayHello = (data: any) => {
 
 <template>
   <div>
-    <Foo />
+    <!-- <Foo /> -->
     <TGTree :data="raw" @action="handleAction"/>
   </div>
 </template>
