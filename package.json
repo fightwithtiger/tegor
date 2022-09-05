@@ -1,0 +1,20 @@
+{
+  "name": "tegor",
+  "version": "1.0.0",
+  "description": "",
+  "workspaces": [
+    "packages/*",
+    "play"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "play": "pnpm -C play dev",
+    "bt": "pnpm build --filter @tegor/components"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "vue": "^3.2.38"
+  }
+}
