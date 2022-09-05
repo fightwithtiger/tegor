@@ -1,0 +1,12 @@
+{
+  "name": "@tegor/share",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+  },
+  "keywords": [],
+  "author": "",
+  "dependencies": {
+  }
+}
