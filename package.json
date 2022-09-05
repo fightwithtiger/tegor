@@ -8,8 +8,11 @@
   ],
   "main": "index.js",
   "scripts": {
+    "build": "pnpm --filter=\"./packages/**\" run build",
     "play": "pnpm -C play dev",
-    "bt": "pnpm build --filter @tegor/components"
+    "build:tu": "pnpm build --filter tegor-ui",
+    "bc": "pnpm build --filter @tegor/components",
+    "clean": "rm -rf node_modules **/*/node_modules **/node_modules dist **/*/dist **/dist"
   },
   "keywords": [],
   "author": "",

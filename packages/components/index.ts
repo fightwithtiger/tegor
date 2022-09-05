@@ -8,5 +8,3 @@ export {
   Foo
 }
 
-export * from './tree'
-export * from './virtualTree'
