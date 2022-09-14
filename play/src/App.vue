@@ -1,9 +1,10 @@
 <script setup lang="ts">
 // import {Foo, TGTree} from 'tegor-ui'
-import {Foo, TGVirtualTree} from '@tegor/components'
-import '@tegor-ui/theme-chalk/style/index.css'
+// import {Foo, TGVirtualTree} from '@tegor/components'
+// import '@tegor-ui/theme-chalk/style/index.css'
 // import {Foo, TGVirtualTree} from '../../packages/components/index'
 import { ref } from 'vue'
+import HelloWorld from './components/HelloWorld.vue';
 const data: any[] = []
 const root = 60
 const children = 200
@@ -56,8 +57,9 @@ const sayHello = (data: any) => {
 
 <template>
   <div>
-    <Foo />
-    <TGVirtualTree :data="raw" @action="handleAction" :height="200" :count="10"/>
+    <!-- <Foo />
+    <TGVirtualTree :data="raw" @action="handleAction" :height="200" :count="10"/> -->
+    <HelloWorld />
   </div>
 </template>
 
