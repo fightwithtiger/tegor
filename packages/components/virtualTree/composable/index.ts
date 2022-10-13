@@ -20,7 +20,7 @@ export function useVirtualTreeStore(id: any) {
         if(!fn) {
           return
         }
-        stores[id].loadMore = () => Promise.resolve(fn())
+        stores[id].loadMore = (val: any) => (Promise.resolve(fn(val)))
       }
     }
   }

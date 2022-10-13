@@ -19,6 +19,7 @@ importers:
       '@rollup/plugin-typescript': ^8.4.0
       '@vue/compiler-sfc': ^3.2.38
       autoprefixer: ^10.4.8
+      cssnano: ^5.1.13
       rimraf: ^3.0.2
       rollup: ^2.79.0
       rollup-plugin-dts: ^4.2.2
@@ -38,6 +39,7 @@ importers:
       '@rollup/plugin-typescript': 8.4.0_lgw3yndmlomwrra4tomb66mtni
       '@vue/compiler-sfc': 3.2.38
       autoprefixer: 10.4.8
+      cssnano: 5.1.13
       rimraf: 3.0.2
       rollup: 2.79.0
       rollup-plugin-dts: 4.2.2_id3sp2lbl4kx3dskm7teaj32um
@@ -49,6 +51,9 @@ importers:
       tslib: 2.4.0
       typescript: 4.8.2
       vue: 3.2.38
+
+  packages/share:
+    specifiers: {}
 
   packages/tegor-ui:
     specifiers:
@@ -90,37 +95,7 @@ importers:
       typescript: 4.8.2
       vue: 3.2.38
 
-  packages/test:
-    specifiers:
-      '@babel/core': ^7.0.0
-      '@rollup/plugin-babel': ^5.3.1
-      '@rollup/plugin-commonjs': ^22.0.2
-      '@rollup/plugin-node-resolve': ^13.3.0
-      '@rollup/plugin-typescript': ^8.4.0
-      '@vue/compiler-sfc': ^3.2.38
-      rimraf: ^3.0.2
-      rollup: ^2.79.0
-      rollup-plugin-dts: ^4.2.2
-      rollup-plugin-typescript2: ^0.33.0
-      rollup-plugin-vue: ^6.0.0
-      typescript: ^4.8.2
-      vue: ^3.2.38
-    devDependencies:
-      '@babel/core': 7.18.13
-      '@rollup/plugin-babel': 5.3.1_qa5xd24o3tymwictiiptlhxtom
-      '@rollup/plugin-commonjs': 22.0.2_rollup@2.79.0
-      '@rollup/plugin-node-resolve': 13.3.0_rollup@2.79.0
-      '@rollup/plugin-typescript': 8.4.0_id3sp2lbl4kx3dskm7teaj32um
-      '@vue/compiler-sfc': 3.2.38
-      rimraf: 3.0.2
-      rollup: 2.79.0
-      rollup-plugin-dts: 4.2.2_id3sp2lbl4kx3dskm7teaj32um
-      rollup-plugin-typescript2: 0.33.0_id3sp2lbl4kx3dskm7teaj32um
-      rollup-plugin-vue: 6.0.0_@vue+compiler-sfc@3.2.38
-      typescript: 4.8.2
-      vue: 3.2.38
-
-  packages/them-chalk:
+  packages/theme-chalk:
     specifiers:
       rimraf: ^3.0.2
     devDependencies:
@@ -439,23 +414,6 @@ packages:
       is-module: 1.0.0
       resolve: 1.22.1
       rollup: 2.79.0
-    dev: true
-
-  /@rollup/plugin-typescript/8.4.0_id3sp2lbl4kx3dskm7teaj32um:
-    resolution: {integrity: sha512-QssfoOP6V4/6skX12EfOW5UzJAv/c334F4OJWmQpe2kg3agEa0JwVCckwmfuvEgDixyX+XyxjFenH7M2rDKUyQ==}
-    engines: {node: '>=8.0.0'}
-    peerDependencies:
-      rollup: ^2.14.0
-      tslib: '*'
-      typescript: '>=3.7.0'
-    peerDependenciesMeta:
-      tslib:
-        optional: true
-    dependencies:
-      '@rollup/pluginutils': 3.1.0_rollup@2.79.0
-      resolve: 1.22.1
-      rollup: 2.79.0
-      typescript: 4.8.2
     dev: true
 
   /@rollup/plugin-typescript/8.4.0_lgw3yndmlomwrra4tomb66mtni:

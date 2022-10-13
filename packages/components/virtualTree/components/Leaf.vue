@@ -22,33 +22,44 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { currentNode, currentAction, loadMore } = useVirtualTreeStore(props.uid)
 
+
 const showSubTree = ref(props.data?.isActive || false)
+
+watch(() => props.data, (val) => {
+  showSubTree.value = val?.isActive || false
+}, {
+  immediate: true
+})
+
 
 const loading = ref(false)
 
 watch(showSubTree, async (val) => {
+  let isActive = false
+  let children = props.data?.children || []
   if(val) {
-    if(loadMore && (!props.data?.children || props.data.children.length === 0)) {
+    if(loadMore && children.length === 0) {
       if(loading.value) {
         return
       }
       loading.value = true
-      const children = await loadMore()
+      children = await loadMore(props.data)
       loading.value = false
-      props.data!.children = children
     }
-    props.data!.isActive = true
+    isActive = true
     currentAction.value = ACTIONS.EXPAND
   }else {
-    props.data!.isActive = false
+    isActive = false
     currentAction.value = ACTIONS.PICK_UP
   }
-  currentNode.value = {...props.data!}
+  props.data!.isActive = isActive
+  props.data!.children = children
+  currentNode.value = props.data!
 })
 
 const select = (node: NodeItem | null) => {
   currentAction.value = ACTIONS.SELECT
-  currentNode.value = {...node!}
+  currentNode.value = node!
 }
 
 

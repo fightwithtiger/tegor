@@ -1,19 +1,21 @@
 <template>
   <div ref="contentRef" @scroll="handleScroll" :class="['leaf-list', 'fix-height']"
-    :style="{ '--wrapper-height': leafsHeight ? `${leafsHeight}px`: 'auto' }">
+    :style="{ 'height': leafsHeight ? `${leafsHeight}px`: 'auto' }">
     <div ref="leafRef" class="list">
-      <Leaf :data-index="item.index" v-for="item of visibleData" :key="item.id" v-bind="$attrs" :uid="uid" :data="item" :NodeComp="NodeComp" />
+      <Leaf :data-index="item.index" :currentNode="currentNode" :eventBus="eventBus" v-for="(item, index) of visibleData" :key="item.parentId ? `${index}-${item.id}-${item.parentId}-${Date.now()}` : `${index}-${item.id}-${Date.now()}`" v-bind="$attrs" :uid="uid" :data="item" :NodeComp="NodeComp" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, computed, onUnmounted, watchEffect } from 'vue'
+import { ref, watch, computed, onUnmounted, onMounted } from 'vue'
 import { NodeItem } from '../type'
-import { markDelte } from '../utils'
+import { flatten, markDelte } from '../utils'
 import Leaf from './Leaf.vue'
 import Node from './Node.vue'
 import { useVirtualTreeStore, removeVirtualTreeStore, guid, ACTIONS } from '../composable'
+import { deepClone } from '../utils'
+import { createEventBus } from '../event'
 
 type Props = {
   data: NodeItem[]
@@ -21,14 +23,18 @@ type Props = {
   NodeComp?: any
   height?: number
   count?: number
+  auto?: boolean
 }
+
+const eventBus = createEventBus()
 
 const props = withDefaults(defineProps<Props>(), {
   data: () => ([]),
   loadMore: null,
   NodeComp: Node,
   height: 0,
-  count: 10
+  count: 10,
+  auto: false,
 })
 
 const emits = defineEmits(['action'])
@@ -62,23 +68,42 @@ watch(() => props.height, (val) => {
   immediate: true
 })
 
+let worker: any = null
+onMounted(() => {
+  worker = new Worker(new URL('../worker.js', import.meta.url), { type: 'module' })
+})
+
 onUnmounted(() => {
+  worker && worker.terminate()
   removeVirtualTreeStore(uid.value)
 })
 
 watch(() => props.data, (val) => {
-  list.value = val.map((i, index) => ({
-    ...i,
-    depth: 0,
-    index,
-  }))
+  if(props.auto) {
+    val = flatten(val, 0, null, null).map((i, index) => ({
+      ...i,
+      index,
+    }))
+  }else {
+    val = val.map((i, index) => ({
+      ...i,
+      depth: 0,
+      index,
+      rootId: i.id,
+    }))
+  }
+  
+  list.value = val
+  startIndex.value = 0
 }, {
   immediate: true
 })
 
-watchEffect(() => {
-  emits('action', currentAction.value, currentNode.value)
-  switch (currentAction.value) {
+watch([currentAction, currentNode], ([action, node]) => {
+  if(action === ACTIONS.NONE) {
+    return
+  }
+  switch (action) {
     case ACTIONS.EXPAND:
       expandLeafs(currentNode.value as NodeItem)
       break
@@ -88,31 +113,102 @@ watchEffect(() => {
     default:
       break
   }
+  emits('action', action, node)
 })
 
+const judgeReachBottom = () => {
+  try{
+    const scrollTop = contentRef.value?.scrollTop || 0
+    const listHeight = contentRef.value?.children[0].getBoundingClientRect().height || 0
+    const contentHeight = contentRef.value?.getBoundingClientRect().height || 0
 
-const deleteLeafs = (parentId: number, leafs: NodeItem[]): NodeItem[] => {
-  markDelte(parentId, leafs)
-  return leafs.filter(i => !i.isDelete)
-}
+    if(listHeight < contentHeight) {
+      return false
+    }
 
-const expandLeafs = (node: NodeItem) => {
-  const leafs = node.children
-  const depth = node.depth
-  leafs.forEach(i => {
-    i.depth = depth! + 1
-    i.parentId = node.id
-    i.isDelete = false
-    i.isActive = false
-  })
-  const idx = list.value.findIndex(i => i.id === node.id)
-  if (idx !== -1) {
-    list.value = [...list.value.slice(0, idx + 1), ...leafs, ...list.value.slice(idx + 1)].map((i, index) => ({...i, index}))
+    return scrollTop + contentHeight >= listHeight ? true : false
+  }catch(e) {
+    console.log(e)
+    return true
   }
 }
 
+const deleteLeafs = (parentId: number | string, rootId: number | string, leafs: NodeItem[], depth: number): NodeItem[] => {
+  markDelte(parentId, rootId, leafs, depth)
+  return leafs.filter(i => !i.isDelete)
+}
+
+const addTag = (nodes: NodeItem[], node: NodeItem) => {
+  const depth = node.depth
+  nodes.forEach(i => {
+    i.depth = depth! + 1
+    i.parentId = node.id
+    i.rootId = node.rootId
+    i.isDelete = false
+    i.isActive = false
+  })
+  return nodes
+}
+
+const expandLeafs = (node: NodeItem) => {
+  const idx = list.value.findIndex(i => (i.id === node.id && i.rootId === node.rootId && i.parentId === node.parentId && i.depth === node.depth ))
+
+  if(idx === -1) {
+    return
+  }
+
+  const leafs = addTag(node.children || [], node)
+  const arr = [...list.value.slice(0, idx), node, ...leafs, ...list.value.slice(idx + 1)]
+  
+  arr.forEach((i, index) => {
+    i.index = index
+  })
+  list.value = arr
+
+  if(judgeReachBottom()) {
+    const leaf = leafRef.value!.children[0]
+    const leafHeight = leaf.getBoundingClientRect().height
+    const scrollTop = contentRef.value?.scrollTop || 0
+    contentRef.value?.scrollTo(0, scrollTop - leafHeight)
+    // contentRef.value?.scrollTo(0, scrollTop + leafHeight)
+  }
+}
+
+
 const pickUp = (node: NodeItem) => {
-  list.value = deleteLeafs(node.id, list.value).map((i, index) => ({...i, index}))
+  worker.postMessage({
+    type: 'del',
+    data: {
+      parentId : node.id,
+      rootId: node.rootId!,
+      leafs: deepClone(list.value),
+      depth: node.depth!
+    }
+  })
+
+  worker.onmessage = function (e: any) {
+    const res = e.data
+    const { type, data } = res
+    if(type !== 'del') {
+      return
+    }
+
+    // list.value = deleteLeafs(node.id, node.rootId!, list.value, node.depth!).map((i, index) => ({...i, index}))
+    list.value = data.map((i: any, index: number) => ({...i, index}))
+    if(list.value.length - startIndex.value - 1 < props.count) {
+      startIndex.value = list.value.length - props.count - 1 < 0 ? 0 : list.value.length - props.count - 1
+    }
+    eventBus.$emit(`pick_up_${currentNode.value!.index}`, null)
+
+    if(judgeReachBottom()) {
+      const leaf = leafRef.value!.children[0]
+      const leafHeight = leaf.getBoundingClientRect().height
+      const scrollTop = contentRef.value?.scrollTop || 0
+      contentRef.value?.scrollTo(0, scrollTop - leafHeight)
+      contentRef.value?.scrollTo(0, scrollTop + leafHeight)
+    }
+  }
+
 }
 
 const updateVisibleData = (scrollTop: number, direction: string) => {
@@ -125,6 +221,7 @@ const updateVisibleData = (scrollTop: number, direction: string) => {
       if (scrollTop > leafHeight * 2) {
         if (list.value.length - startIndex.value > props.count) {
           startIndex.value = +leafIndex + 1
+          contentRef.value?.scrollTo(0, scrollTop - leafHeight)
         }
       }
     } else {
@@ -132,7 +229,7 @@ const updateVisibleData = (scrollTop: number, direction: string) => {
         if ((startIndex.value > 0 && scrollTop !== 0) || startIndex.value === 1) {
           startIndex.value = +leafIndex - 1
         }else if(startIndex.value > 1 && scrollTop === 0) {
-          startIndex.value = +leafIndex - 2
+          startIndex.value = +leafIndex - 1
           contentRef.value?.scrollTo(0, leafHeight)
         }
       }
@@ -162,13 +259,7 @@ const handleScroll = (e: any) => {
 
 <style scoped>
 .fix-height {
-  height: var(--wrapper-height);
   overflow-y: auto;
 }
 
-.item {
-  width: 100%;
-  height: 2px;
-  background-color: red;
-}
 </style>

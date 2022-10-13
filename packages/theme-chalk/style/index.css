@@ -1,4 +1,3 @@
-.text[data-v-2726e342]{color:blue;font-weight:700}
 .sub-leaf[data-v-bbb56ed0]{display:flex;text-align:left}.wrapper[data-v-bbb56ed0]{cursor:pointer;padding:4px 8px}.spread[data-v-bbb56ed0]{padding:0 4px}
-.leaf[data-v-9e2e73d2]{cursor:pointer;padding:6px 10px;text-align:left}.indent[data-v-9e2e73d2]{display:inline-block;height:100%;width:12px}
-.fix-height[data-v-40573b78]{height:var(--wrapper-height);overflow-y:auto}.item[data-v-40573b78]{background-color:red;height:2px;width:100%}
+.leaf[data-v-9e2e73d2]{cursor:pointer;display:flex;padding:6px 10px;text-align:left}.item[data-v-9e2e73d2]{flex-shrink:0}.indent[data-v-9e2e73d2]{display:inline-block;height:100%;width:12px}
+.fix-height[data-v-40573b78]{overflow-y:auto}
