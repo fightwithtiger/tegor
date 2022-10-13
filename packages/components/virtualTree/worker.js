@@ -1,7 +1,6 @@
 self.onmessage = function (e) {
   const res = e.data
   const { type, data } = res
-  console.log('wwwwwwwwwwww')
   if(type === 'del') {
     const { parentId, rootId, leafs, depth } = data
     const list = deleteLeafs(parentId, rootId, leafs, depth)
