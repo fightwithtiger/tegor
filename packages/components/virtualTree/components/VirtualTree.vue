@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, computed, onUnmounted, onMounted } from 'vue'
+import { ref, watch, computed, onUnmounted, onMounted, toRaw } from 'vue'
 import { NodeItem } from '../type'
 import { flatten, markDelte } from '../utils'
 import Leaf from './Leaf.vue'
@@ -174,14 +174,27 @@ const expandLeafs = (node: NodeItem) => {
   }
 }
 
+const arrayToRaw = (arr) => {
+  const r = toRaw(arr)
+  for(let i=0; i<r.length; i++) {
+    r[i] = toRaw(r[i])
+    if(r[i].children) {
+      r[i].children = arrayToRaw(r[i].children)
+    }
+  }
+
+  return r
+}
+
 
 const pickUp = (node: NodeItem) => {
+  const leafs = arrayToRaw(list.value)
   worker.postMessage({
     type: 'del',
     data: {
       parentId : node.id,
       rootId: node.rootId!,
-      leafs: deepClone(list.value),
+      leafs,
       depth: node.depth!
     }
   })
