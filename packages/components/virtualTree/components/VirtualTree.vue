@@ -174,7 +174,7 @@ const expandLeafs = (node: NodeItem) => {
   }
 }
 
-const arrayToRaw = (arr) => {
+const arrayToRaw = (arr: any[]) => {
   const r = toRaw(arr)
   for(let i=0; i<r.length; i++) {
     r[i] = toRaw(r[i])
