@@ -4,10 +4,12 @@ importers:
 
   .:
     specifiers:
-      '@tegor/share': workspace:^1.0.0
+      '@tegor-ui/components': workspace:^1.0.0
+      '@tegor-ui/share': workspace:^1.0.0
       vue: ^3.2.38
     dependencies:
-      '@tegor/share': link:packages/share
+      '@tegor-ui/components': link:packages/components
+      '@tegor-ui/share': link:packages/share
       vue: 3.2.38
 
   packages/components:
@@ -62,7 +64,6 @@ importers:
       '@rollup/plugin-commonjs': ^22.0.2
       '@rollup/plugin-node-resolve': ^13.3.0
       '@rollup/plugin-typescript': ^8.4.0
-      '@tegor/components': workspace:^1.0.0
       '@vue/compiler-sfc': ^3.2.38
       autoprefixer: ^10.4.8
       cssnano: ^5.1.13
@@ -81,7 +82,6 @@ importers:
       '@rollup/plugin-commonjs': 22.0.2_rollup@2.79.0
       '@rollup/plugin-node-resolve': 13.3.0_rollup@2.79.0
       '@rollup/plugin-typescript': 8.4.0_lgw3yndmlomwrra4tomb66mtni
-      '@tegor/components': link:../components
       '@vue/compiler-sfc': 3.2.38
       autoprefixer: 10.4.8
       cssnano: 5.1.13
@@ -103,18 +103,12 @@ importers:
 
   play:
     specifiers:
-      '@tegor-ui/theme-chalk': workspace:^1.0.0
-      '@tegor/components': workspace:^1.0.0
       '@vitejs/plugin-vue': ^3.0.3
-      tegor-ui: workspace:^1.0.0
       typescript: ^4.6.4
       vite: ^3.0.7
       vue: ^3.2.37
       vue-tsc: ^0.39.5
     dependencies:
-      '@tegor-ui/theme-chalk': link:../packages/theme-chalk
-      '@tegor/components': link:../packages/components
-      tegor-ui: link:../packages/tegor-ui
       vue: 3.2.38
     devDependencies:
       '@vitejs/plugin-vue': 3.0.3_vite@3.0.9+vue@3.2.38

@@ -22,7 +22,8 @@
     "vue": "^3.2.0"
   },
   "dependencies": {
-    "@tegor/share": "workspace:^1.0.0",
+    "@tegor-ui/components": "workspace:^1.0.0",
+    "@tegor-ui/share": "workspace:^1.0.0",
     "vue": "^3.2.38"
   }
 }

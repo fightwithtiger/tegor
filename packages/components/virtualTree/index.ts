@@ -3,7 +3,7 @@ export * from './event'
 
 import VirtualTree from './components/VirtualTree.vue'
 import { App } from 'vue'
-import { SFCWithInstall } from '@tegor/share'
+import { SFCWithInstall } from '@tegor-ui/share'
 
 VirtualTree.install = (app: App): void => {
   app.component(VirtualTree.name || 'TGVirtualTree', VirtualTree)
